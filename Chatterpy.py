@@ -31,7 +31,6 @@ __license__     = """
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
 def encode(key, msg):
     """Vigenere cipher encoding"""
     encoded_msg = []
@@ -41,16 +40,17 @@ def encode(key, msg):
         encoded_msg.append(enc_c)
     return base64.urlsafe_b64encode("".join(encoded_msg))
 
-
+    
 def decode(key, encoded_msg):
-    """Vigenere cipher decoding"""
+    # """Vigenere cipher decoding"""
     decoded_message = []
+    encoded_msg = base64.urlsafe_b64decode(encoded_msg)
     for i in range(len(encoded_msg)):
         key_c = key[i % len(key)]
         dec_c = chr((256 + ord(encoded_msg[i]) - ord(key_c)) % 256)
         decoded_message.append(dec_c)
     return "".join(decoded_message)
-
+    
 
 def random_name():
     """Generates a random name"""
@@ -76,7 +76,8 @@ def random_name():
             name += random.choice(vowels)
 
     return name
-    
+  
+  
 class Chatterpy:
     """Simple, yet buggy, shared database internal chat."""
 
@@ -85,17 +86,21 @@ class Chatterpy:
         # Options
         self.chat = chat
         self.username  = username
-        self.key  = password
         self.color  = color
-
+        self.key  = password
+        
         # TODO: clean this hack...
         self.available_colors = ["Blue", "Red", "Green", "Black", "Orange", "Purple", "Cyan", "Yellow", "Pink", "Brown", "Steel blue", "Chocolate"]
         
+        # GUI options
         self.refresh_time = 1.0
         self.show_date = False
         self.show_time = False
         self.height = 20
         self.width = 40
+        
+        # Word to check successful decripton
+        self.key_check = "Chatterpy used decription, it's not very effective..."
         
         # Si no dispone de nombre se le asignara uno de oficio
         if username is None:
@@ -134,16 +139,23 @@ class Chatterpy:
                 
                 # Decode msg
                 if self.key:
-                    # Add message to screen
                     timestamp = decode(self.key, elem[0])
                     username = decode(self.key, elem[1])
                     color = decode(self.key, elem[2])
                     msg = decode(self.key, elem[3])
+                    key_check = decode(self.key, elem[4])
                 else:
                     timestamp = elem[0]
                     username = elem[1]
                     color = elem[2]
                     msg = elem[3]
+                    key_check = elem[4]
+                
+                # Check decription
+                if key_check != self.key_check:
+                    print "Key does not match the message encryption, ignoring message"
+                    continue
+                
                 
                 # Add timestamp if selected
                 if self.show_date:
@@ -205,15 +217,17 @@ class Chatterpy:
             coded_username = encode(self.key, self.username)
             coded_color = encode(self.key, self.color)
             coded_msg = encode(self.key, msg)
+            coded_key_check = encode(self.key, str(self.key_check))
         else:
             coded_timestamp = str(datetime.now())
             coded_username = self.username
             coded_color = self.color
             coded_msg = msg
+            coded_key_check = self.key_check
             
         # Write to file
         with open(self.chat, "ab") as f:
-            pickle.dump((coded_timestamp, coded_username, coded_color, coded_msg), f)
+            pickle.dump((coded_timestamp, coded_username, coded_color, coded_msg, coded_key_check), f)
             
         # Update screen
         self.update_screen()
