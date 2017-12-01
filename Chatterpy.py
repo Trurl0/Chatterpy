@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Chaterpy.py: Simple, yet buggy, shared database internal chat."""
+"""Chatterpy.py: Simple, yet buggy, shared database internal chat."""
 
-import sqlite3
 import Tkinter
 import ttk
 from datetime import datetime
@@ -16,7 +15,7 @@ import cPickle as pickle
 
 
 __author__      = "Miguel Sanchez Cid"
-__email__       = "misanchez@assystem.com"
+__email__       = "mxanxez@gmail.com"
 __credits__     = "Original idea by Javier Rivas"
 __copyright__   = "Copyright 2017, Miguel Sanchez"
 __license__     = """
@@ -34,7 +33,7 @@ __license__     = """
 
 
 def encode(key, msg):
-    """Vignere ciphre encoding"""
+    """Vigenere cipher encoding"""
     encoded_msg = []
     for i in range(len(msg)):
         key_c = key[i % len(key)]
@@ -44,7 +43,7 @@ def encode(key, msg):
 
 
 def decode(key, encoded_msg):
-    """Vignere ciphre decoding"""
+    """Vigenere cipher decoding"""
     decoded_message = []
     for i in range(len(encoded_msg)):
         key_c = key[i % len(key)]
@@ -60,7 +59,7 @@ def random_name():
     vowels = "aeiou"
     last_vowel=False
     
-    # Random first letter
+    # First uppercase letter
     if random.choice([True, False]):
         name = random.choice(consonants).upper()
     else:
@@ -222,7 +221,7 @@ class Chatterpy:
     def send_msg_button_pressed(self, event=None):
         """Send message and clear writing field"""
     
-        # Pad new lines with spaces
+        # Get message
         msg = self.sendText.get("1.0", Tkinter.END)
         
         # If called with Enter, remove last \n
@@ -230,7 +229,7 @@ class Chatterpy:
             msg = "\n".join([elem for elem in msg.split("\n")[:-1]])
         self.send_msg(msg)
         
-        # Clear
+        # Clear field
         self.sendText.delete("1.0", Tkinter.END)
             
     def delete_chat(self):
@@ -243,7 +242,7 @@ class Chatterpy:
         """
         Chatterpy: Simple, yet buggy, shared database internal chat.
         author    = "Miguel Sanchez Cid"
-        email     = "misanchez@assystem.com"
+        email     = "mxanxez@gmail.com"
         credits   = "Original idea by Javier Rivas"
         copyright = "Copyright 2017, Miguel Sanchez"
         license = "GNU General Public License"
@@ -301,9 +300,6 @@ class Chatterpy:
         toplevel.attributes('-topmost', True)
         toplevel.resizable(False, False)
         
-        # label0 = Tkinter.Label(toplevel, text="\n     Options:", font=("Helvetica", 9, "bold"))
-        # label0.grid(row=nrow, column=1, columnspan=2, sticky = "sw")
-        
         nrow+=1
         label = ttk.Label(toplevel, text=" ")
         label.grid(row=nrow, column=1, padx=1)
@@ -317,7 +313,7 @@ class Chatterpy:
         username_field_button = ttk.Button(toplevel, text=" Username: ", command= reroll_username)
         username_field_button.grid(row=nrow, column=1, sticky="e")
         username_field = ttk.Entry(toplevel, width = 25)
-        username_field.grid(row=nrow, column=2, sticky="w") #, padx=10, pady=10)
+        username_field.grid(row=nrow, column=2, sticky="w")
         username_field.delete(0, Tkinter.END)
         username_field.insert(0, self.username)         
         
@@ -361,8 +357,7 @@ class Chatterpy:
         chat_field_button = ttk.Button(toplevel, text=" Chat: ", command= set_chat_button)
         chat_field_button.grid(row=nrow, column=1, sticky="e")
         chat_field = ttk.Entry(toplevel, width = 25)
-        # chat_field = Tkinter.Text(toplevel, height=1, width = 20)
-        chat_field.grid(row=nrow, column=2, sticky="w") #, padx=10, pady=10)
+        chat_field.grid(row=nrow, column=2, sticky="w")
         chat_field.delete(0, Tkinter.END)
         chat_field.insert(0, self.chat) 
         
@@ -387,7 +382,7 @@ class Chatterpy:
         
         nrow+=1
         label = ttk.Label(toplevel, text=" ")
-        label.grid(row=nrow, column=1)#, padx=1)
+        label.grid(row=nrow, column=1)
         
         nrow+=1
         label = Tkinter.Label(toplevel, text="Refresh time:  ")
